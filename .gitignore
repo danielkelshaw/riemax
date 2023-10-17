@@ -1,0 +1,24 @@
+**/__pycache__
+**/.ipynb_checkpoints
+
+# editor config
+.idea/
+.vscode/
+
+# distribution
+*.egg-info/
+*.egg
+develop-eggs/
+eggs/
+build/
+site/
+dist/
+sdist/
+
+# project specific
+venv/
+notes/
+wandb/
+
+tmp_*
+.python-version
