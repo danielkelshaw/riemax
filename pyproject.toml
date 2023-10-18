@@ -64,6 +64,9 @@ ignore = ["E501"]
 
 line-length = 120
 
+[tool.ruff.per-file-ignores]
+"**/__init__.py" = ["F401"]
+
 [tool.pyright]
 include = ["src"]
 pythonVersion = "3.12"

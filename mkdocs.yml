@@ -1,0 +1,154 @@
+site_name: Riemax
+
+repo_url: https://github.com/danielkelshaw/riemax
+repo_name: danielkelshaw/riemax
+
+theme:
+
+  name: material
+  language: en
+
+  palette:
+
+    # palette toggle for light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue grey
+      accent: red
+      toggle:
+        icon: material/toggle-switch
+        name: Switch to dark mode
+
+    # palette toggle for dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: blue grey
+      accent: red
+      toggle:
+        icon: material/toggle-switch-off-outline
+        name: Switch to light mode
+
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+  features:
+    - navigation.sections
+    - header.autohide
+    - navigation.indexes
+    - navigation.instant
+    - navigation.instant.progress
+    - content.code.copy
+    - content.code.annotate
+
+  icon:
+    repo: fontawesome/brands/github
+    annotation: material/arrow-right-circle
+
+extra:
+  generator: false
+
+plugins:
+  - search
+
+  - mknotebooks:
+      enable_default_jupyter_cell_styling: false
+
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+
+            # general
+            show_bases: true
+            show_source: true
+
+            # headings
+            heading_level: 3
+            show_root_heading: true
+            show_root_full_path: true
+            show_root_members_full_path: true
+
+            # members
+            inherited_members: false
+            members_order: source
+            group_by_category: true
+            docstring_style: google
+            docstring_section_style: table
+            show_if_no_docstring: false
+            show_docstring_attributes: true
+            show_docstring_functions: true
+            show_docstring_description: true
+            show_docstring_parameters: true
+            show_docstring_returns: true
+
+            # signatures
+            annotations_path: full
+            line_length: 60
+            show_signature: true
+            show_signature_annotations: true
+            separate_signature: false
+            unwrap_annotated: true
+
+
+markdown_extensions:
+
+  # tooltips
+  - abbr
+  - attr_list
+  - pymdownx.snippets
+
+  # annotations (w/ attr_list)
+  - md_in_html
+  - pymdownx.superfences
+
+  # admonitions (w/ pymdownx.superfences)
+  - admonition
+  - pymdownx.details
+
+  # custom lists
+  - def_list
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+  # code blocks (w/ pydownx.snippets, pydownx.superfences)
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+
+  # tabs (w/ pymdownx.superfences)
+  - pymdownx.tabbed:
+      alternate_style: true
+
+  # footnotes
+  - footnotes
+
+  # formatting
+  - pymdownx.critic
+  - pymdownx.caret
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.tilde
+
+  # smart symbols
+  - pymdownx.smartsymbols
+
+  # maths
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+copyright: Copyright &copy; 2023 Daniel Kelshaw
+
+nav:
+  - Getting Started: index.md
+  - API:
+    - Manifold:
+      - manifold/index.md
+      - manifold/geometry.md
