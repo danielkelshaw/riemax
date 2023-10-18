@@ -149,6 +149,6 @@ copyright: Copyright &copy; 2023 Daniel Kelshaw
 nav:
   - Getting Started: index.md
   - API:
-    - Manifold:
+    - manifold:
       - manifold/index.md
-      - manifold/geometry.md
+      - geometry: manifold/geometry.md

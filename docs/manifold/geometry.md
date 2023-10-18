@@ -9,4 +9,4 @@ Please see the following references for an introduction.[^1][^2][^3][^4]
 [^3]: Lee, John M. Introduction to Riemannian Manifolds. 2018.
 [^4]: Lee, John M. Introduction to Smooth Manifolds. 2012.
 
-::: src.riemax.manifold.geometry
+::: src.riemax.geometry
