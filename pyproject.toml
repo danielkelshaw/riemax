@@ -35,6 +35,7 @@ dependencies = [
     "scipy",
     "optax",
     "ml_collections @ git+http://github.com/google/ml_collections",
+    "opt_einsum @git+https://github.com/dgasmith/opt_einsum",
 ]
 
 [project.optional-dependencies]
