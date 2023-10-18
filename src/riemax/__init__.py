@@ -1,2 +1,2 @@
 from . import manifold
-from .manifold import Manifold, geometry
+from .manifold import Manifold, geometry, operators

@@ -1,2 +1,2 @@
-from . import geometry, types
+from . import geometry, operators, types
 from ._manifold import Manifold
