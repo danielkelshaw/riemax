@@ -5,6 +5,7 @@ import jax
 import jax.numpy as jnp
 import jax.tree_util as jtu
 
+from ._marked import manifold_marker
 from .types import M, MetricFn, TpM
 
 
@@ -90,6 +91,7 @@ def metric_tensor(x: M[jax.Array], fn_transformation: tp.Callable[[M[jax.Array]]
     return jnp.einsum('ki, kj -> ij', fn_jacobian, fn_jacobian)
 
 
+@manifold_marker.mark(jittable=True)
 def inner_product(x: M[jax.Array], v: TpM[jax.Array], w: TpM[jax.Array], metric: MetricFn) -> jax.Array:
 
     r"""Compute inner product on the tanget plane, $g_p (v, w)$.
@@ -110,6 +112,7 @@ def inner_product(x: M[jax.Array], v: TpM[jax.Array], w: TpM[jax.Array], metric:
     return jnp.einsum('ij, i, j -> ', metric(x), v, w)
 
 
+@manifold_marker.mark(jittable=True)
 def magnitude(x: M[jax.Array], v: TpM[jax.Array], metric: MetricFn) -> jax.Array:
 
     r"""Compute length of vector on the tangent space, $\lVert v \rVert$
@@ -133,6 +136,7 @@ def magnitude(x: M[jax.Array], v: TpM[jax.Array], metric: MetricFn) -> jax.Array
     return jnp.sqrt(inner_product(x, v, v, metric))
 
 
+@manifold_marker.mark(jittable=True)
 def contravariant_metric_tensor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
 
     r"""Computes inverse of the metric tensor.
@@ -160,6 +164,7 @@ def contravariant_metric_tensor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
     return jnp.linalg.inv(metric(x))
 
 
+@manifold_marker.mark(jittable=True)
 def fk_christoffel(x: M[jax.Array], metric: MetricFn) -> jax.Array:
 
     r"""Christoffel symbols of the first kind $\Gamma_{kij} = \left[ ij, k \right]$.
@@ -191,6 +196,7 @@ def fk_christoffel(x: M[jax.Array], metric: MetricFn) -> jax.Array:
     return jnp.vectorize(get_value)(*jnp.indices(dgdx.shape))
 
 
+@manifold_marker.mark(jittable=True)
 def sk_christoffel(x: M[jax.Array], metric: MetricFn) -> jax.Array:
 
     r"""Christoffel symbols of the second kind: $\Gamma^k_{\phantom{k}ij} = \left\{ ij, k \right\}$
@@ -216,6 +222,7 @@ def sk_christoffel(x: M[jax.Array], metric: MetricFn) -> jax.Array:
     return jnp.einsum('kn, nij -> kij', contravariant_g_ij, fk_christ)
 
 
+@manifold_marker.mark(jittable=True)
 def sk_riemann_tensor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
 
     r"""Compute Riemann curvature tensor of the second kind, $R^i_{\phantom{i}jkl}$
@@ -256,6 +263,7 @@ def sk_riemann_tensor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
     return g_ijm_k - g_ijk_m + g_irk_g_rjm - g_irm_g_rjk
 
 
+@manifold_marker.mark(jittable=True)
 def fk_riemann_tensor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
 
     r"""Compute Riemann tensor of the first kind, $R_{ijkl}$
@@ -283,6 +291,7 @@ def fk_riemann_tensor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
     return jnp.einsum('ir, rjkm -> ijkm', g_ir, r_rjkm)
 
 
+@manifold_marker.mark(jittable=True)
 def ricci_tensor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
 
     r"""Compute the Ricci tensor, $R_{ij}$
@@ -306,6 +315,7 @@ def ricci_tensor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
     return jnp.einsum('kikj -> ij', r_kikj)
 
 
+@manifold_marker.mark(jittable=True)
 def ricci_scalar(x: M[jax.Array], metric: MetricFn) -> jax.Array:
 
     r"""Compute the Ricci scalar, $R$.
@@ -314,7 +324,7 @@ def ricci_scalar(x: M[jax.Array], metric: MetricFn) -> jax.Array:
     through taking the geometric trace of the Ricci tensor, $R_{ij}$:
 
     $$
-    R = g_{ij} R_{ij}
+    R = g^{ij} R_{ij}
     $$
 
     Parameters:
@@ -331,6 +341,7 @@ def ricci_scalar(x: M[jax.Array], metric: MetricFn) -> jax.Array:
     return jnp.einsum('ij, ij -> ', contra_g_ij, r_ij)
 
 
+@manifold_marker.mark(jittable=True)
 def einstein_tensor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
 
     r"""Compute the Einstein tensor, $G_{ij}$
@@ -362,6 +373,7 @@ def einstein_tensor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
     return ricci_t - 0.5 * g_ij * ricci_s
 
 
+@manifold_marker.mark(jittable=True)
 def magnification_factor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
 
     r"""Compute the magnification factor.
