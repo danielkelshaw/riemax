@@ -2,17 +2,14 @@ from __future__ import annotations
 
 import typing as tp
 
-import jax
-
 from .types import MetricFn
 
-type GenericManifoldFn[*Ts, T] = tp.Callable[[*Ts, MetricFn], T]
-type ManifoldFn[*Ts] = GenericManifoldFn[*Ts, jax.Array]
+type ManifoldFn[*Ts, T] = tp.Callable[[*Ts, MetricFn], T]
 
 
-class _Marker[*Ts](tp.NamedTuple):
+class _Marker[*Ts, T](tp.NamedTuple):
 
-    fn: ManifoldFn[*Ts]
+    fn: ManifoldFn[*Ts, T]
     jittable: bool
 
 
