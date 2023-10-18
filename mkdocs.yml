@@ -157,3 +157,4 @@ nav:
     - numerical:
       - numerical/index.md
       - newton_raphson: numerical/newton_raphson.md
+      - integrators: numerical/integrators.md
