@@ -153,6 +153,8 @@ nav:
       - manifold/index.md
       - geometry: manifold/geometry.md
       - operators: manifold/operators.md
+      - geodesic: manifold/geodesic.md
+      - maps: manifold/maps.md
       - euclidean: manifold/euclidean.md
     - numerical:
       - numerical/index.md
