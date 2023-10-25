@@ -15,7 +15,6 @@ from .types import MetricFn, TangentSpace
 
 @manifold_marker.mark(jittable=True)
 def geodesic_dynamics(state: TangentSpace[jax.Array], metric: MetricFn) -> TangentSpace[jax.Array]:
-
     r"""Compute update step for the geodesic dynamics.
 
     The geodesic equation
@@ -42,7 +41,6 @@ def geodesic_dynamics(state: TangentSpace[jax.Array], metric: MetricFn) -> Tange
 
 
 def alternative_geodesic_dynamics(state: TangentSpace[jax.Array], metric: MetricFn) -> TangentSpace[jax.Array]:
-
     r"""Compute geodesic dynamics, as per (Arvanitidis, G., Hansen, LK., Hauberg, S., 2018).[^1]
 
     !!! note "Latent Space Oddity Approach"
@@ -86,12 +84,21 @@ def _compute_discretised_length(geodesic: TangentSpace[jax.Array], metric: Metri
     return jnp.sqrt(inner_product(geodesic.point, geodesic.vector, geodesic.vector, metric))
 
 
-def _integrate_curve_quantity(fn_quantity: tp.Callable[[TangentSpace[jax.Array]], jax.Array], geodesic: TangentSpace[jax.Array], dt: float, integral_approximator: IntegralApproximationFn) -> jax.Array:
+def _integrate_curve_quantity(
+    fn_quantity: tp.Callable[[TangentSpace[jax.Array]], jax.Array],
+    geodesic: TangentSpace[jax.Array],
+    dt: float,
+    integral_approximator: IntegralApproximationFn,
+) -> jax.Array:
     return integral_approximator(jax.vmap(fn_quantity)(geodesic), dt)
 
 
-def compute_geodesic_length(geodesic: TangentSpace[jax.Array], dt: float, metric: MetricFn, integral_approximator: IntegralApproximationFn = mean_integration) -> jax.Array:
-
+def compute_geodesic_length(
+    geodesic: TangentSpace[jax.Array],
+    dt: float,
+    metric: MetricFn,
+    integral_approximator: IntegralApproximationFn = mean_integration,
+) -> jax.Array:
     r"""Compute length of the geodesic.
 
     The length of a geodesic is defined as
@@ -114,8 +121,12 @@ def compute_geodesic_length(geodesic: TangentSpace[jax.Array], dt: float, metric
     return _integrate_curve_quantity(quantity_fn, geodesic, dt, integral_approximator)
 
 
-def compute_geodesic_energy(geodesic: TangentSpace[jax.Array], dt: float, metric: MetricFn, integral_approximator: IntegralApproximationFn = mean_integration) -> jax.Array:
-
+def compute_geodesic_energy(
+    geodesic: TangentSpace[jax.Array],
+    dt: float,
+    metric: MetricFn,
+    integral_approximator: IntegralApproximationFn = mean_integration,
+) -> jax.Array:
     r"""Compute energy of the geodesic.
 
     The energy of a geodesic is defined as

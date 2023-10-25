@@ -3,7 +3,6 @@ import jax.numpy as jnp
 
 
 def metric_tensor(x: jax.Array) -> jax.Array:
-
     r"""Defines the metric tensor for Euclidean space.
 
     In Euclidean space, the metric tensor is defined as the identity matrix
@@ -27,7 +26,6 @@ def metric_tensor(x: jax.Array) -> jax.Array:
 
 
 def distance(p: jax.Array, q: jax.Array) -> jax.Array:
-
     r"""Compute Euclidean distance between points.
 
     The Euclidean distance is simply defined by the L2 norm:

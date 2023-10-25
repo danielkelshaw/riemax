@@ -30,11 +30,12 @@ type Integrator[T] = tp.Callable[[ParametersIVP[T], T], tuple[T, T]]
 
 
 def _merge_states[T](preceding: T, final: T) -> T:
-    return jtu.tree_map(lambda preceding, final: jnp.concatenate([preceding, jnp.expand_dims(final, 0)]), preceding, final)
+    return jtu.tree_map(
+        lambda preceding, final: jnp.concatenate([preceding, jnp.expand_dims(final, 0)]), preceding, final
+    )
 
 
 def _adjoint_warning[T](fn: Integrator[T]) -> Integrator[T]:
-
     """Decorator to raise warning when adjoint-incompatible integrator used.
 
     Parameters:
@@ -63,9 +64,9 @@ def _adjoint_warning[T](fn: Integrator[T]) -> Integrator[T]:
 #         Should we work with flattened state here, simplifying to working with jnp arrays
 #            This means we don't have to work with arbitrary PyTrees...
 
+
 @_adjoint_warning
 def euler_integrator[T](ivp_params: ParametersIVP[T], initial_state: T) -> tuple[T, T]:
-
     """Forward-Euler method for integration of the initial value problem.
 
     Parameters:
@@ -78,7 +79,6 @@ def euler_integrator[T](ivp_params: ParametersIVP[T], initial_state: T) -> tuple
     """
 
     def _single_step(state: T, _: None) -> tuple[T, T]:
-
         update = ivp_params.differential_operator(state)
         next_state = jtu.tree_map(lambda x, dxdt: x + dxdt * ivp_params.dt, state, update)
 
@@ -92,7 +92,6 @@ def euler_integrator[T](ivp_params: ParametersIVP[T], initial_state: T) -> tuple
 
 @_adjoint_warning
 def implicit_euler_integrator[T](ivp_params: ParametersIVP[T], initial_state: T) -> tuple[T, T]:
-
     """implicit-Euler method for integration of the initial value problem.
 
     Parameters:
@@ -113,7 +112,6 @@ def implicit_euler_integrator[T](ivp_params: ParametersIVP[T], initial_state: T)
         return jtu.tree_map(lambda s, cs, u: s - cs - u * ivp_params.dt, state, curr_state, update)
 
     def _single_step(state: T, _: None) -> tuple[T, T]:
-
         # initial guess for the newton-raphson is the forward-Euler method
         update = ivp_params.differential_operator(state)
         nr_initial_state = jtu.tree_map(lambda x, dxdt: x + dxdt * ivp_params.dt, state, update)
@@ -122,7 +120,7 @@ def implicit_euler_integrator[T](ivp_params: ParametersIVP[T], initial_state: T)
         p_residual = jtu.Partial(_residual, state)
 
         # compute optimised state
-        next_state, _ = newton_raphson(p_residual, nr_initial_state, nr_params)                          # type: ignore
+        next_state, _ = newton_raphson(p_residual, nr_initial_state, nr_params)  # type: ignore
 
         return next_state, state
 
@@ -134,7 +132,6 @@ def implicit_euler_integrator[T](ivp_params: ParametersIVP[T], initial_state: T)
 
 @_adjoint_warning
 def rk4_integrator[T](ivp_params: ParametersIVP[T], initial_state: T) -> tuple[T, T]:
-
     """Runge-Kutta (4th order) method for integration of the initial value problem.
 
     Parameters:
@@ -147,7 +144,6 @@ def rk4_integrator[T](ivp_params: ParametersIVP[T], initial_state: T) -> tuple[T
     """
 
     def _single_step(state: T, _: None) -> tuple[T, T]:
-
         k1 = ivp_params.differential_operator(state)
         k2 = ivp_params.differential_operator(jtu.tree_map(lambda s, k: s + ivp_params.dt * k / 2.0, state, k1))
         k3 = ivp_params.differential_operator(jtu.tree_map(lambda s, k: s + ivp_params.dt * k / 2.0, state, k2))
@@ -166,7 +162,6 @@ def rk4_integrator[T](ivp_params: ParametersIVP[T], initial_state: T) -> tuple[T
 
 
 def _timewrap[T](fn: tp.Callable[[T], T]) -> tp.Callable[[T, jax.Array], T]:
-
     """Injects time-dependence into time-independent function.
 
     Parameters:
@@ -178,7 +173,6 @@ def _timewrap[T](fn: tp.Callable[[T], T]) -> tp.Callable[[T, jax.Array], T]:
 
     @ft.wraps(fn)
     def _fn(x: T, t: jax.Array) -> T:
-
         """Over-ridden function with injected time-dependence.
 
         Parameters:
@@ -195,7 +189,6 @@ def _timewrap[T](fn: tp.Callable[[T], T]) -> tp.Callable[[T, jax.Array], T]:
 
 
 def odeint[T](ivp_params: ParametersIVP[T], initial_state: T) -> tuple[T, T]:
-
     """DOPRI (4,5th order) method for integration of initial value problem -- adjoint compatible.
 
     Parameters:

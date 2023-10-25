@@ -47,10 +47,8 @@ class Manifold:
     """
 
     def __new__(cls, metric: MetricFn, *, jit: bool = True) -> Manifold:
-
         obj = super().__new__(cls)
-        for (fn, jittable) in manifold_marker:
-
+        for fn, jittable in manifold_marker:
             p_fn = jtu.Partial(fn, metric=metric)
 
             if jittable and jit:
@@ -63,7 +61,6 @@ class Manifold:
         return obj
 
     def __init__(self, metric: MetricFn, *, jit: bool = True) -> None:
-
         """Instantiate a Manifold
 
         Parameters:
@@ -78,8 +75,9 @@ class Manifold:
         return f'Manifold(metric={self.metric_tensor.__name__})'
 
     @classmethod
-    def from_fn_transformation(cls, fn_transformation: tp.Callable[[M[jax.Array]], jax.Array], *, jit: bool = True) -> Manifold:
-
+    def from_fn_transformation(
+        cls, fn_transformation: tp.Callable[[M[jax.Array]], jax.Array], *, jit: bool = True
+    ) -> Manifold:
         """Instantiates an induced Manifold from a function transformation.
 
         Parameters:

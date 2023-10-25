@@ -9,11 +9,7 @@ from ._marked import manifold_marker
 from .types import M, MetricFn, TpM
 
 
-def pullback[**P, T](
-    f: tp.Callable[P, T],
-    fn_transformation: tp.Callable[[jax.Array], jax.Array]
-) -> tp.Callable[P, T]:
-
+def pullback[**P, T](f: tp.Callable[P, T], fn_transformation: tp.Callable[[jax.Array], jax.Array]) -> tp.Callable[P, T]:
     r"""Define the pullback of a function by a transformation.
 
     Let $\iota: M \hookrightarrow N$ be a smooth immersion, and suppose $f: N \rightarrow S$ is a smooth function on N.
@@ -52,7 +48,6 @@ def pullback[**P, T](
     """
 
     def f_pullback(*args: P.args, **kwargs: P.kwargs) -> T:
-
         args = jtu.tree_map(fn_transformation, args)
         kwargs = jtu.tree_map(fn_transformation, kwargs)
 
@@ -62,7 +57,6 @@ def pullback[**P, T](
 
 
 def metric_tensor(x: M[jax.Array], fn_transformation: tp.Callable[[M[jax.Array]], jax.Array]) -> jax.Array:
-
     r"""Computes the covariant metric tensor at a point $p \in M$
 
     Given a smooth immersion $\iota: M \hookrightarrow N$, we can define the induced metric:
@@ -93,7 +87,6 @@ def metric_tensor(x: M[jax.Array], fn_transformation: tp.Callable[[M[jax.Array]]
 
 @manifold_marker.mark(jittable=True)
 def inner_product(x: M[jax.Array], v: TpM[jax.Array], w: TpM[jax.Array], metric: MetricFn) -> jax.Array:
-
     r"""Compute inner product on the tanget plane, $g_p (v, w)$.
 
     The inner product is essential for computing the magnitude of vectors on the tangent space and can be used in
@@ -114,7 +107,6 @@ def inner_product(x: M[jax.Array], v: TpM[jax.Array], w: TpM[jax.Array], metric:
 
 @manifold_marker.mark(jittable=True)
 def magnitude(x: M[jax.Array], v: TpM[jax.Array], metric: MetricFn) -> jax.Array:
-
     r"""Compute length of vector on the tangent space, $\lVert v \rVert$
 
     The metric $g$ provides the ability to compute the inner product on the tangent space. Using the standard definition
@@ -138,7 +130,6 @@ def magnitude(x: M[jax.Array], v: TpM[jax.Array], metric: MetricFn) -> jax.Array
 
 @manifold_marker.mark(jittable=True)
 def contravariant_metric_tensor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
-
     r"""Computes inverse of the metric tensor.
 
     We observe that the identity $g_{ij} g^{ij} = I$ holds. This function allows us to compute the inverse of the
@@ -166,7 +157,6 @@ def contravariant_metric_tensor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
 
 @manifold_marker.mark(jittable=True)
 def fk_christoffel(x: M[jax.Array], metric: MetricFn) -> jax.Array:
-
     r"""Christoffel symbols of the first kind $\Gamma_{kij} = \left[ ij, k \right]$.
 
     These Christoffel symbols are components of the affine connection, defined as
@@ -198,7 +188,6 @@ def fk_christoffel(x: M[jax.Array], metric: MetricFn) -> jax.Array:
 
 @manifold_marker.mark(jittable=True)
 def sk_christoffel(x: M[jax.Array], metric: MetricFn) -> jax.Array:
-
     r"""Christoffel symbols of the second kind: $\Gamma^k_{\phantom{k}ij} = \left\{ ij, k \right\}$
 
     The Christoffel symbols of the second-kind are simply index-raised versions of the Christoffel symbols of the first
@@ -224,7 +213,6 @@ def sk_christoffel(x: M[jax.Array], metric: MetricFn) -> jax.Array:
 
 @manifold_marker.mark(jittable=True)
 def sk_riemann_tensor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
-
     r"""Compute Riemann curvature tensor of the second kind, $R^i_{\phantom{i}jkl}$
 
     The Riemann tensor provides a notion of curvature on the manifold. It is defined in terms of covariant derivatives
@@ -265,12 +253,10 @@ def sk_riemann_tensor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
 
 @manifold_marker.mark(jittable=True)
 def fk_riemann_tensor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
-
     r"""Compute Riemann tensor of the first kind, $R_{ijkl}$
 
-    The Riemann tensor of the first-kind is the index-lowered variant of the
-    Riemann tensor of the second-kind. We simply apply an index contraction with
-    the metric tensor to achieve this.
+    The Riemann tensor of the first-kind is the index-lowered variant of the Riemann tensor of the second-kind. We
+    simply apply an index contraction with the metric tensor to achieve this.
 
     !!! note
         A more efficient implementation would involve computing this directly by using Christoffel symbols of the
@@ -293,7 +279,6 @@ def fk_riemann_tensor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
 
 @manifold_marker.mark(jittable=True)
 def ricci_tensor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
-
     r"""Compute the Ricci tensor, $R_{ij}$
 
     The Ricci tensor $R_{ij}$ is a tensor contraction of the Riemann curvature tensor $R^i_{\phantom{i}jkl}$ over the
@@ -317,7 +302,6 @@ def ricci_tensor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
 
 @manifold_marker.mark(jittable=True)
 def ricci_scalar(x: M[jax.Array], metric: MetricFn) -> jax.Array:
-
     r"""Compute the Ricci scalar, $R$.
 
     The Ricci scalar $R$ yields a single real number which quantifies the curvature on the manifold. It is obtained
@@ -343,7 +327,6 @@ def ricci_scalar(x: M[jax.Array], metric: MetricFn) -> jax.Array:
 
 @manifold_marker.mark(jittable=True)
 def einstein_tensor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
-
     r"""Compute the Einstein tensor, $G_{ij}$
 
     The Einstein tensor, also known as the trace-reversed Ricci tensor is defined as
@@ -368,14 +351,13 @@ def einstein_tensor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
 
     # note: we avoid calls to `contravariant_metric_tensor, ricci_scalar`
     #       to avoid unnecessary computation of the metric and ricci tensor.
-    ricci_s = jnp.einsum('ij, ij -> ', jnp.linalg.inv(g_ij), ricci_t) # type: ignore
+    ricci_s = jnp.einsum('ij, ij -> ', jnp.linalg.inv(g_ij), ricci_t)  # type: ignore
 
     return ricci_t - 0.5 * g_ij * ricci_s
 
 
 @manifold_marker.mark(jittable=True)
 def magnification_factor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
-
     r"""Compute the magnification factor.
 
     The magnification factor provides a measure of the local distortion of the distance. It is defined as

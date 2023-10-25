@@ -10,7 +10,9 @@ from .geodesic import geodesic_dynamics
 from .types import M, MetricFn, TangentSpace, TpM
 
 type ExponentialMap = tp.Callable[[TangentSpace[jax.Array]], tuple[M[jax.Array], TangentSpace[jax.Array]]]
-type LogMap[*Ts] = tp.Callable[[TangentSpace[jax.Array] | M[jax.Array], M[jax.Array], *Ts], tuple[TangentSpace[jax.Array], bool]]
+type LogMap[*Ts] = tp.Callable[
+    [TangentSpace[jax.Array] | M[jax.Array], M[jax.Array], *Ts], tuple[TangentSpace[jax.Array], bool]
+]
 
 
 def _transform_integrator_to_exp[T](integrator_output: tuple[TangentSpace[T], TangentSpace[T]]):
@@ -19,9 +21,8 @@ def _transform_integrator_to_exp[T](integrator_output: tuple[TangentSpace[T], Ta
 
 
 def _integrator_to_exp[T](
-        fn: tp.Callable[[TangentSpace[T]], tuple[TangentSpace[T], TangentSpace[T]]]
+    fn: tp.Callable[[TangentSpace[T]], tuple[TangentSpace[T], TangentSpace[T]]]
 ) -> tp.Callable[[TangentSpace[T]], tuple[M[T], TangentSpace[T]]]:
-
     @ft.wraps(fn)
     def _fn(state: TangentSpace[T]) -> tuple[M[T], TangentSpace[T]]:
         return _transform_integrator_to_exp(fn(state))
@@ -29,8 +30,9 @@ def _integrator_to_exp[T](
     return _fn
 
 
-def exponential_map_factory(integrator: Integrator[TangentSpace[jax.Array]], dt: float, metric: MetricFn, n_steps: int | None = None) -> ExponentialMap:
-
+def exponential_map_factory(
+    integrator: Integrator[TangentSpace[jax.Array]], dt: float, metric: MetricFn, n_steps: int | None = None
+) -> ExponentialMap:
     r"""Produce an exponential map, $\exp: TM \rightarrow M$.
 
     !!! note "Example"
@@ -65,7 +67,6 @@ def exponential_map_factory(integrator: Integrator[TangentSpace[jax.Array]], dt:
 
 
 def shooting_log_map_factory(exp_map: ExponentialMap, nr_parameters: NewtonRaphsonParams | None = None) -> LogMap:
-
     r"""Produce log map, computed using a shooting method.
 
     !!! note "Efficacy of Shooting Solvers:"
@@ -86,7 +87,6 @@ def shooting_log_map_factory(exp_map: ExponentialMap, nr_parameters: NewtonRaphs
         p: TangentSpace[jax.Array] | M[jax.Array],
         q: M[jax.Array],
     ) -> tuple[TangentSpace[jax.Array], bool]:
-
         """Compute the log map between points p and q.
 
         Parameters:
@@ -102,7 +102,6 @@ def shooting_log_map_factory(exp_map: ExponentialMap, nr_parameters: NewtonRaphs
             p = TangentSpace(point=p, vector=(q - p))
 
         def shooting_residual(p_dot: TpM[jax.Array]) -> TpM[jax.Array]:
-
             initial_state = TangentSpace[jax.Array](point=p.point, vector=p_dot)
             point, _ = exp_map(initial_state)
 
