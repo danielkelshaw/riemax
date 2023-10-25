@@ -10,7 +10,6 @@ from .types import M, MetricFn
 
 @manifold_marker.mark(jittable=False)
 def grad(fn: tp.Callable[[M[jax.Array]], jax.Array], metric: MetricFn) -> tp.Callable[[M[jax.Array]], jax.Array]:
-
     r"""Compute gradient of scalar function on the manifold.
 
     When an inner product $\langle \cdot, \cdot \rangle$ is defined, the gradient $\nabla f$ of a function $f$ is
@@ -56,7 +55,6 @@ def grad(fn: tp.Callable[[M[jax.Array]], jax.Array], metric: MetricFn) -> tp.Cal
 
     @ft.wraps(fn)
     def transformed(x: M[jax.Array]) -> jax.Array:
-
         co_gx = metric(x)
         contra_gx = jnp.linalg.inv(co_gx)
 
@@ -69,7 +67,6 @@ def grad(fn: tp.Callable[[M[jax.Array]], jax.Array], metric: MetricFn) -> tp.Cal
 
 @manifold_marker.mark(jittable=False)
 def div(fn: tp.Callable[[M[jax.Array]], jax.Array], metric: MetricFn) -> tp.Callable[[M[jax.Array]], jax.Array]:
-
     r"""Compute divergence of vector-valued function on the manifold.
 
     Given a vector field $X \in TM$, we define the divergence as[^1][^2]
@@ -91,12 +88,10 @@ def div(fn: tp.Callable[[M[jax.Array]], jax.Array], metric: MetricFn) -> tp.Call
 
     @ft.wraps(fn)
     def transformed(x: M[jax.Array]) -> jax.Array:
-
         co_gx = metric(x)
         sqrt_det_co_gx = jnp.sqrt(jnp.linalg.det(co_gx))
 
         def _inner(_x: M[jax.Array]) -> jax.Array:
-
             co_gx_inner = metric(_x)
             sqrt_det_co_gx_inner = jnp.sqrt(jnp.linalg.det(co_gx_inner))
 
@@ -115,8 +110,9 @@ def div(fn: tp.Callable[[M[jax.Array]], jax.Array], metric: MetricFn) -> tp.Call
 
 
 @manifold_marker.mark(jittable=False)
-def laplace_beltrami(fn: tp.Callable[[M[jax.Array]], jax.Array], metric: MetricFn) -> tp.Callable[[M[jax.Array]], jax.Array]:
-
+def laplace_beltrami(
+    fn: tp.Callable[[M[jax.Array]], jax.Array], metric: MetricFn
+) -> tp.Callable[[M[jax.Array]], jax.Array]:
     r"""Compute laplacian of scalar-valued function on the manifold.
 
     Given a function $f: M \rightarrow \mathbb{R}$, we can compute the Laplacian by taking the divergence of the

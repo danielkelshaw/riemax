@@ -7,7 +7,6 @@ type IntegralApproximationFn = tp.Callable[[jax.Array, float], jax.Array]
 
 
 def mean_integration(fx: jax.Array, _: float) -> jax.Array:
-
     """Integration by taking mean.
 
     Parameters:
@@ -25,7 +24,6 @@ def mean_integration(fx: jax.Array, _: float) -> jax.Array:
 
 
 def trapezoidal_integration(fx: jax.Array, h: float) -> jax.Array:
-
     """Integration by trapezoidal rule.
 
     Parameters:
@@ -43,7 +41,6 @@ def trapezoidal_integration(fx: jax.Array, h: float) -> jax.Array:
 
 
 def simpsons_integration(fx: jax.Array, h: float) -> jax.Array:
-
     """Integration by Simpsons 1/3 rule.
 
     Parameters:

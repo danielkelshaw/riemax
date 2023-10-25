@@ -10,7 +10,6 @@ import opt_einsum as oe
 
 
 class NewtonRaphsonParams(tp.NamedTuple):
-
     max_steps: int = 100
     min_steps: int = 2
 
@@ -19,7 +18,6 @@ class NewtonRaphsonParams(tp.NamedTuple):
 
 
 class _NewtonRaphsonState[T](tp.NamedTuple):
-
     flat: jax.Array
     step: int
     residual: float
@@ -43,17 +41,18 @@ class NewtonConvergenceState(tp.NamedTuple):
     target_residual: float
 
     @classmethod
-    def _from_params_state(cls, nr_params: NewtonRaphsonParams, nr_state: _NewtonRaphsonState) -> NewtonConvergenceState:
+    def _from_params_state(
+        cls, nr_params: NewtonRaphsonParams, nr_state: _NewtonRaphsonState
+    ) -> NewtonConvergenceState:
         return cls(
             step=nr_state.step,
             max_steps=nr_params.max_steps,
             residual=nr_state.residual,
-            target_residual=nr_params.target_residual
+            target_residual=nr_params.target_residual,
         )
 
     @property
     def converged(self) -> bool:
-
         """Determines whether Newton method converged for given budget.
 
         Returns:
@@ -67,11 +66,8 @@ class NewtonConvergenceState(tp.NamedTuple):
 
 
 def newton_raphson[T](
-    fn_residual: tp.Callable[[T], T],
-    initial_guess: T,
-    nr_parameters: NewtonRaphsonParams | None = None
+    fn_residual: tp.Callable[[T], T], initial_guess: T, nr_parameters: NewtonRaphsonParams | None = None
 ) -> tuple[T, NewtonConvergenceState]:
-
     """Newton-Raphson root finding for arbitrary PyTrees.
 
     Parameters:
@@ -95,7 +91,6 @@ def newton_raphson[T](
     initial_nr_state = _NewtonRaphsonState(flat=flat, step=0, residual=float(jnp.inf))
 
     def _condition(nr_state: _NewtonRaphsonState) -> bool:
-
         # step size tests
         at_least_min_steps = nr_state.step < nr_parameters.min_steps
         step_okay = nr_state.step < nr_parameters.max_steps
@@ -106,7 +101,6 @@ def newton_raphson[T](
         return at_least_min_steps | (step_okay & not_converged)
 
     def _body_fn(nr_state: _NewtonRaphsonState) -> _NewtonRaphsonState:
-
         # compute the residual and jacobian
         rx = curried_fn_residual(nr_state.flat)
         rx_jacobian = jax.jacobian(curried_fn_residual)(nr_state.flat)
@@ -119,7 +113,7 @@ def newton_raphson[T](
         step = nr_state.step + 1
 
         # compute rms_norm of residual
-        f_rx: float = oe.contract('... -> ', rx ** 2) / rx.shape[0]
+        f_rx: float = oe.contract('... -> ', rx**2) / rx.shape[0]
 
         return _NewtonRaphsonState(flat=flat, step=step, residual=f_rx)
 
