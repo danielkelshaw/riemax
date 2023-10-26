@@ -154,6 +154,7 @@ nav:
       - geometry: manifold/geometry.md
       - operators: manifold/operators.md
       - geodesic: manifold/geodesic.md
+      - symplectic: manifold/symplectic.md
       - maps: manifold/maps.md
       - euclidean: manifold/euclidean.md
     - numerical:
