@@ -162,3 +162,4 @@ nav:
       - newton_raphson: numerical/newton_raphson.md
       - integrators: numerical/integrators.md
       - curves: numerical/curves.md
+      - sampling: numerical/sampling.md
