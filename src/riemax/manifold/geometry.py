@@ -146,7 +146,7 @@ def contravariant_metric_tensor(x: M[jax.Array], metric: MetricFn) -> jax.Array:
 
     Parameters:
         x: position $p \in M$ at which to evaluate the inverse of the metric tensor
-        metric: function defining the metric tensor on the manifold.
+        metric: function defining the metric tensor on the manifold
 
     Returns:
         contravariant metric tensor.

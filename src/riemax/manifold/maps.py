@@ -7,6 +7,7 @@ import jax.tree_util as jtu
 from ..numerical.integrators import Integrator, ParametersIVP
 from ..numerical.newton_raphson import NewtonRaphsonParams, newton_raphson
 from .geodesic import geodesic_dynamics
+from .symplectic import LagrangianSymplecticIntegrator, SymplecticParams
 from .types import M, MetricFn, TangentSpace, TpM
 
 type ExponentialMap = tp.Callable[[TangentSpace[jax.Array]], tuple[M[jax.Array], TangentSpace[jax.Array]]]
@@ -35,7 +36,7 @@ def exponential_map_factory(
 ) -> ExponentialMap:
     r"""Produce an exponential map, $\exp: TM \rightarrow M$.
 
-    !!! note "Example"
+    !!! note "Example:"
 
         ```python
         # ...
@@ -46,7 +47,7 @@ def exponential_map_factory(
     Parameters:
         integrator: choice of integrator used to propgate dynamics
         dt: time-step for the integration
-        metric: function to compute metric tensor
+        metric: function defining the metric tensor on the manifold
         n_steps: number of steps to integrate for
 
     Returns:
@@ -62,6 +63,34 @@ def exponential_map_factory(
     @_integrator_to_exp
     def exp_map(state: TangentSpace[jax.Array]) -> tuple[TangentSpace[jax.Array], TangentSpace[jax.Array]]:
         return integrator(ivp_params, state)
+
+    return exp_map
+
+
+def symplectic_exponential_map_factory(
+    integrator: LagrangianSymplecticIntegrator, dt: float, omega: float, metric: MetricFn, n_steps: int | None = None
+) -> ExponentialMap:
+    r"""Produce an exponential map, $\exp: TM \rightarrow M$, using symplectic dynamics.
+
+    Parameters:
+        integrator: choice of Lagrangian symplectic integrator used to propgate dynamics
+        dt: time-step for the integration
+        omega: strength of the constraint between the phase-split copies
+        metric: function defining the metric tensor on the manifold
+        n_steps: number of steps to integrate for
+
+    Returns:
+        exp_map: function for computing exponential map
+    """
+
+    if not n_steps:
+        n_steps = int(1.0 // dt)
+
+    symplectic_params = SymplecticParams(metric=metric, dt=dt, omega=omega, n_steps=n_steps)
+
+    @_integrator_to_exp
+    def exp_map(state: TangentSpace[jax.Array]) -> tuple[TangentSpace[jax.Array], TangentSpace[jax.Array]]:
+        return integrator(symplectic_params, state)
 
     return exp_map
 
