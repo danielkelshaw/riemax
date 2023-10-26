@@ -3,10 +3,11 @@ import typing as tp
 
 import jax
 import jax.tree_util as jtu
+import optax
 
 from ..numerical.integrators import Integrator, ParametersIVP
 from ..numerical.newton_raphson import NewtonRaphsonParams, newton_raphson
-from .geodesic import geodesic_dynamics
+from .geodesic import geodesic_dynamics, minimising_geodesic, scipy_bvp_geodesic
 from .symplectic import LagrangianSymplecticIntegrator, SymplecticParams
 from .types import M, MetricFn, TangentSpace, TpM
 
@@ -144,5 +145,95 @@ def shooting_log_map_factory(exp_map: ExponentialMap, nr_parameters: NewtonRaphs
         initial_condition = TangentSpace[jax.Array](point=p.point, vector=p_dot)
 
         return initial_condition, newton_convergence_state.converged
+
+    return log_map
+
+
+def minimising_log_map_factory(
+    metric: MetricFn,
+    optimiser: optax.GradientTransformation,
+    num_nodes: int = 20,
+    n_collocation: int = 100,
+    iterations: int = 100,
+    tol: float = 1e-4,
+) -> LogMap:
+    r"""Produce a log-map using an energy-minimising approach.
+
+    Parameters:
+        metric: function defining the metric tensor on the manifold
+        optimiser: optimiser to use to minimise energy of the curve
+        num_nodes: number of nodes to use to parameterise cubic spline
+        n_collocation: number of points at which to evaluate energy along the curve
+        iterations: number of iterations to optimise for
+        tol: tolerance for measuring convergence
+
+    Returns:
+        log_map: function to compute the log map between $p, q \in M$
+    """
+
+    def log_map(p: TangentSpace[jax.Array] | M[jax.Array], q: M[jax.Array]) -> tuple[TangentSpace[jax.Array], bool]:
+        """Compute the log map between points p and q.
+
+        Parameters:
+            p: origin point on the manifold
+            q: destination point on the manifold
+
+        Returns:
+            state which, when the exponential map is taken at p, yields q
+        """
+
+        if isinstance(p, TangentSpace):
+            p = p.point
+
+        geodesic, converged = minimising_geodesic(
+            p=p,
+            q=q,
+            metric=metric,
+            optimiser=optimiser,
+            num_nodes=num_nodes,
+            n_collocation=n_collocation,
+            iterations=iterations,
+            tol=tol,
+        )
+
+        return TangentSpace(point=geodesic.point[0], vector=geodesic.vector[0]), converged
+
+    return log_map
+
+
+def scipy_bvp_log_map_factory(
+    metric: MetricFn, n_collocation: int = 100, explicit_jacobian: bool = False, tol: float = 1e-4
+) -> LogMap:
+    r"""Produce a log-map using scipy solve_bvp approach.
+
+    Parameters:
+        metric: function defining the metric tensor on the manifold
+        n_collocation: number of points at which to evaluate energy along the curve
+        explicit_jacobian: whether to use the jacobian compute by jax
+        tol: tolerance for measuring convergence
+
+    Returns:
+        log_map: function to compute the log map between $p, q \in M$
+    """
+
+    def log_map(p: TangentSpace[jax.Array] | M[jax.Array], q: M[jax.Array]) -> tuple[TangentSpace[jax.Array], bool]:
+        """Compute the log map between points p and q.
+
+        Parameters:
+            p: origin point on the manifold
+            q: destination point on the manifold
+
+        Returns:
+            state which, when the exponential map is taken at p, yields q
+        """
+
+        if isinstance(p, TangentSpace):
+            p = p.point
+
+        geodesic, converged = scipy_bvp_geodesic(
+            p=p, q=q, metric=metric, n_collocation=n_collocation, explicit_jacobian=explicit_jacobian, tol=tol
+        )
+
+        return TangentSpace(point=geodesic.point[0], vector=geodesic.vector[0]), converged
 
     return log_map
