@@ -15,7 +15,7 @@ Riemax is a [JAX] library for Riemannian geometry, providing the ability to defi
 pip install git+https://github.com/danielkelshaw/riemax
 ```
 
-Requires Python 3.11+ and JAX 0.4.13+.
+Requires Python 3.12+ and JAX 0.4.13+.
 
 ## Quick Example
 

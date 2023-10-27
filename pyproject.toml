@@ -2,15 +2,22 @@
 requires = ["hatchling"]
 build-backend = "hatchling.build"
 
+[tool.hatch.version]
+path = "src/riemax/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+exclude = [
+  "/docs",
+]
+
 [tool.hatch.build.targets.wheel]
-package = ["src/riemax"]
+packages = ["src/riemax"]
 
 [tool.hatch.metadata]
 allow-direct-references = true
 
 [project]
 name = "riemax"
-version = "0.0.1"
 description = "Riemannian geometry in JAX."
 
 requires-python = ">=3.12"
@@ -56,7 +63,7 @@ dev = [
 ]
 
 [project.urls]
-homepage = "https://github.com/danielkelshaw/riemax"
+homepage = "https://riemax.danielkelshaw.com"
 repository = "https://github.com/danielkelshaw/riemax"
 
 [tool.ruff]
