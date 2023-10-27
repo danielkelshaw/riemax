@@ -148,6 +148,9 @@ copyright: Copyright &copy; 2023 Daniel Kelshaw
 
 nav:
   - Getting Started: index.md
+  - Examples:
+    - Introduction to Riemax: 'examples/introduction.ipynb'
+    - Curvature-based Sampling: 'examples/curvature_sampling.ipynb'
   - API:
     - manifold:
       - manifold/index.md
