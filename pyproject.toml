@@ -30,6 +30,8 @@ authors = [
 
 keywords = ["jax", "geometry", "deep-learning"]
 
+dynamic = ["version"]
+
 dependencies = [
     "absl-py",
     "chex",
