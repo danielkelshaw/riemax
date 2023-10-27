@@ -85,7 +85,7 @@ If you found this library to be useful in academic work, then please cite:
 
 ```tex
 @misc{kelshaw2023riemax
-    title = {{Riemax}: differential geometry in {JAX} via automatic differentiation}
+    title = {{Riemax}: {R}iemannian geometry in {JAX} via automatic differentiation}
     author = {Daniel Kelshaw}
     year = {2023},
     url = {https://github.com/danielkelshaw/riemax}
