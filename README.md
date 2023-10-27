@@ -1,9 +1,7 @@
 # Riemax: Riemannian geometry for JAX
 
-???+ example "Note to the reader:"
-
-    This library is very much a work in progress, as is the documentation. Naturally, the contents of this library is subject to change depending on choice of research avenue. At the moment, there exists a solid basis on which to build, but the API may change to improve accessiblity for new users. If there is anything you would like to see in the library, or anything you think that needs to change -- please do let me know.
-
+> [!IMPORTANT]
+> This library is very much a work in progress, as is the documentation. Naturally, the contents of this library is subject to change depending on choice of research avenue. At the moment, there exists a solid basis on which to build, but the API may change to improve accessiblity for new users. If there is anything you would like to see in the library, or anything you think that needs to change -- please do let me know.
 
 Riemax is a [JAX] library for Riemannian geometry, providing the ability to define induced metrics and operate on manifolds directly. This includes functionality, such as:
 
