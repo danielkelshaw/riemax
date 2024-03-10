@@ -24,7 +24,6 @@ class _NewtonRaphsonState[T](tp.NamedTuple):
 
 
 class NewtonConvergenceState(tp.NamedTuple):
-
     """Store for information about convergence of Newton method.
 
     Parameters:

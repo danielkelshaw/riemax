@@ -23,7 +23,7 @@ def _transform_integrator_to_exp[T](integrator_output: tuple[TangentSpace[T], Ta
 
 
 def _integrator_to_exp[T](
-    fn: tp.Callable[[TangentSpace[T]], tuple[TangentSpace[T], TangentSpace[T]]]
+    fn: tp.Callable[[TangentSpace[T]], tuple[TangentSpace[T], TangentSpace[T]]],
 ) -> tp.Callable[[TangentSpace[T]], tuple[M[T], TangentSpace[T]]]:
     @ft.wraps(fn)
     def _fn(state: TangentSpace[T]) -> tuple[M[T], TangentSpace[T]]:

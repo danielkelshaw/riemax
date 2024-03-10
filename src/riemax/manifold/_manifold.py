@@ -11,7 +11,6 @@ from .types import M, MetricFn
 
 
 class Manifold:
-
     """Convenience class for creating a manifold.
 
     !!! note

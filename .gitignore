@@ -16,6 +16,7 @@ dist/
 sdist/
 
 # project specific
+.venv/
 venv/
 notes/
 wandb/

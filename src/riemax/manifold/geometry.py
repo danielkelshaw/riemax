@@ -29,8 +29,10 @@ def pullback[**P, T](f: tp.Callable[P, T], fn_transformation: tp.Callable[[jax.A
     ```python
     # ...
 
+
     def euclidean_distance(p: jax.Array, q: jax.Array) -> jax.Array:
         return jnp.sum(jnp.square(p - q))
+
 
     # pullback_distance: Callable[[M[jax.Array]], Rn[jax.Array]]
     pullback_distance = riemax.geometry.pullback(euclidean_distance, fn_transformation)

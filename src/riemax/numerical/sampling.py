@@ -5,7 +5,7 @@ import jax.numpy as jnp
 
 
 def _rwmh_kernel(
-    key: jax.random.PRNGKeyArray,
+    key: jax.Array,
     fn: tp.Callable[[jax.Array], float],
     position: jax.Array,
     log_prob: jax.Array,
@@ -43,7 +43,7 @@ def _rwmh_kernel(
 
 
 def rwmh_sampler(
-    key: jax.random.PRNGKeyArray,
+    key: jax.Array,
     n_samples: int,
     fn: tp.Callable[[jax.Array], float],
     initial_position: jax.Array,

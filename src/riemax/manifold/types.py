@@ -10,7 +10,6 @@ type MetricFn = tp.Callable[[M[jax.Array]], jax.Array]
 
 
 class TangentSpace[T](tp.NamedTuple):
-
     r"""Representation of the tangent space on the manifold
 
     Parameters:

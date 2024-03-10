@@ -13,7 +13,6 @@ from .types import MetricFn, TangentSpace
 
 
 class SymplecticGeodesicState(tp.NamedTuple):
-
     """PyTree for Symplectic Geodesic State.
 
     Parameters:
@@ -54,7 +53,6 @@ class SymplecticGeodesicState(tp.NamedTuple):
 
 
 class PhaseDoubledSymplecticGeodesicState(tp.NamedTuple):
-
     """PyTree for the phase-doubled Symplectic Geodesic State
 
     Parameters:
@@ -278,7 +276,6 @@ def construct_nth_order_dynamics(n: int):
 
 
 class SymplecticParams(tp.NamedTuple):
-
     """Contained for parameters of symplectic integration
 
     Parameters:
@@ -342,7 +339,7 @@ def construct_nth_order_symplectic_integrator(n: int) -> PhaseDoubledSymplecticI
 
 
 def _phase_doubled_to_lagrangian_integrator(
-    symplectic_integrator: PhaseDoubledSymplecticIntegrator
+    symplectic_integrator: PhaseDoubledSymplecticIntegrator,
 ) -> LagrangianSymplecticIntegrator:
     """Provide an interface to allow passing Lagrangian coordinates.
 

@@ -32,9 +32,9 @@ def construct_update[**P, T, S](
 
 
 def construct_initialiser[**P, T, S](
-    transform_init: tp.Callable[tp.Concatenate[jax.random.PRNGKeyArray, P], hk.Params],
+    transform_init: tp.Callable[tp.Concatenate[jax.Array, P], hk.Params],
     optimiser: optax.GradientTransformation,
-) -> tp.Callable[tp.Concatenate[jax.random.PRNGKeyArray, P], TrainingState]:
+) -> tp.Callable[tp.Concatenate[jax.Array, P], TrainingState]:
     """Construct initialised for a TrainingState.
 
     Parameters:
@@ -45,7 +45,7 @@ def construct_initialiser[**P, T, S](
         _initialise: a function which returns an initialised TrainingState.
     """
 
-    def _initialise(key: jax.random.PRNGKeyArray, *args: P.args, **kwargs: P.kwargs) -> TrainingState:
+    def _initialise(key: jax.Array, *args: P.args, **kwargs: P.kwargs) -> TrainingState:
         params = transform_init(key, *args, **kwargs)
         opt_state = optimiser.init(params)
 

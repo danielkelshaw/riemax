@@ -11,7 +11,6 @@ from .newton_raphson import NewtonRaphsonParams, newton_raphson
 
 
 class ParametersIVP[T](tp.NamedTuple):
-
     """Parameters for the Initial Value Problem.
 
     Parameters:
@@ -45,8 +44,7 @@ def _adjoint_warning[T](fn: Integrator[T]) -> Integrator[T]:
         decorated integrator -- raising warning when differentiated through
     """
 
-    class AdjointWarning(UserWarning):
-        ...
+    class AdjointWarning(UserWarning): ...
 
     @jtu.Partial(jax.custom_jvp, nondiff_argnums=(0,))
     def wrapped_fn(ivp_params: ParametersIVP[T], initial_state: T) -> tuple[T, T]:
