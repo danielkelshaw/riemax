@@ -84,7 +84,7 @@ def euler_integrator[T](ivp_params: ParametersIVP[T], initial_state: T) -> tuple
 
         return next_state, state
 
-    final_state, preceding_states = jax.lax.scan(_single_step, initial_state, None, ivp_params.n_steps)
+    final_state, preceding_states = jax.lax.scan(_single_step, initial_state, None, int(ivp_params.n_steps))
     full_state = _merge_states(preceding=preceding_states, final=final_state)
 
     return final_state, full_state
