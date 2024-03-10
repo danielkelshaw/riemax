@@ -36,8 +36,10 @@ def grad(fn: tp.Callable[[M[jax.Array]], jax.Array], metric: MetricFn) -> tp.Cal
     ```python
     # ...
 
+
     def scalar_fn(p: jax.Array) -> jax.Array:
         return jnp.sum(jnp.square(p))
+
 
     fn_grad = riemax.manifold.operators.grad(scalar_fn, fn_metric)
     ```

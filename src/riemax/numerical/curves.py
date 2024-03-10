@@ -10,7 +10,6 @@ from ..manifold.types import TangentSpace
 
 
 class CubicSpline(tp.NamedTuple):
-
     """Cubic spline parameterised by basis of the null-space.
 
     Parameters:
