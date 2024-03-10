@@ -43,7 +43,7 @@ dependencies = [
     "numpy",
     "scipy",
     "optax",
-    "ml_collections @ git+http://github.com/google/ml_collections",
+    "ml_collections @ git+http://github.com/danielkelshaw/ml_collections",
     "opt_einsum @git+https://github.com/dgasmith/opt_einsum",
 ]
 
@@ -71,10 +71,10 @@ repository = "https://github.com/danielkelshaw/riemax"
 [tool.ruff]
 indent-width = 4
 line-length = 120
-target-version = "py311"
+target-version = "py312"
 
 [tool.ruff.lint]
-ignore = ["E501"]
+ignore = ["E501", "B023"]
 select = ["E", "F", "B", "I"]
 
 [tool.ruff.format]
