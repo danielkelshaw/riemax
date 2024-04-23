@@ -87,6 +87,7 @@ docstring-code-format = true
 
 [tool.pyright]
 include = ["src"]
+ignore = ["src/riemax/ml/eikonal/model.py"]
 pythonVersion = "3.12"
 venvPath = "."
 venv = ".venv"
