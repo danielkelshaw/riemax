@@ -60,7 +60,8 @@ def grad(fn: tp.Callable[[M[jax.Array]], jax.Array], metric: MetricFn) -> tp.Cal
         co_gx = metric(x)
         contra_gx = jnp.linalg.inv(co_gx)
 
-        fn_j = jax.jacfwd(fn)(x)
+        # note: use jacrev as mapping to a scalar
+        fn_j = jax.jacrev(fn)(x)
 
         return jnp.einsum('ij, ...j -> i', contra_gx, fn_j)
 
