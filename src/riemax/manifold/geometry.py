@@ -83,7 +83,8 @@ def metric_tensor(x: M[jax.Array], fn_transformation: tp.Callable[[M[jax.Array]]
         covariant metric tensor, $g_{ij}(p)$
     """
 
-    fn_jacobian = jax.jacobian(fn_transformation)(x)
+    # note: use jacfwd as mapping to higher dimensional space
+    fn_jacobian = jax.jacfwd(fn_transformation)(x)
     return jnp.einsum('ki, kj -> ij', fn_jacobian, fn_jacobian)
 
 
@@ -180,7 +181,8 @@ def fk_christoffel(x: M[jax.Array], metric: MetricFn) -> jax.Array:
         christoffel symbols of the first kind.
     """
 
-    dgdx = jax.jacobian(metric)(x)
+    # note: use jacfwd as mapping to higher dimensional space
+    dgdx = jax.jacfwd(metric)(x)
 
     def get_value(k, i, j) -> jax.Array:
         return 0.5 * (dgdx[k, i, j] + dgdx[k, j, i] - dgdx[i, j, k])

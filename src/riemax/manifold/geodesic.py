@@ -73,7 +73,7 @@ def alternative_geodesic_dynamics(state: TangentSpace[jax.Array], metric: Metric
 
     contra_g_ij = contravariant_metric_tensor(state.point, metric)
 
-    dgdx = jax.jacobian(metric)(state.point)
+    dgdx = jax.jacfwd(metric)(state.point)
     central_term = 2.0 * einops.rearrange(dgdx, 'i j k -> i (j k)') - einops.rearrange(dgdx, 'i j k -> k (i j)')
 
     vector_dot = -0.5 * contra_g_ij @ central_term @ jnp.kron(state.vector, state.vector)
@@ -277,7 +277,7 @@ def scipy_bvp_geodesic(
 
     fn_jacobian = None
     if explicit_jacobian:
-        fn_jacobian = numpy_wrapped(t_last(jax.vmap(jax.jacobian(_fn_ode, argnums=1), in_axes=(None, 1))))
+        fn_jacobian = numpy_wrapped(t_last(jax.vmap(jax.jacfwd(_fn_ode, argnums=1), in_axes=(None, 1))))
 
     @numpy_wrapped
     def fn_bc(ya, yb):

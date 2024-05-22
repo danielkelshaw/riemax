@@ -102,7 +102,10 @@ def newton_raphson[T](
     def _body_fn(nr_state: _NewtonRaphsonState) -> _NewtonRaphsonState:
         # compute the residual and jacobian
         rx = curried_fn_residual(nr_state.flat)
-        rx_jacobian = jax.jacobian(curried_fn_residual)(nr_state.flat)
+
+        # note: although the residual could be a scalar, we use jacrev due to the nature of this project.
+        #       we are quite likely computing a jacobian through an ode solve -- for which we want the adjoint.
+        rx_jacobian = jax.jacrev(curried_fn_residual)(nr_state.flat)
 
         # solve the system of equations and update
         diff = jsp.linalg.solve(rx_jacobian, rx)
