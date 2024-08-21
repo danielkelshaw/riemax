@@ -5,6 +5,7 @@ import jax
 import jax.tree_util as jtu
 import optax
 
+from ..numerical.adjoint import euler
 from ..numerical.integrators import Integrator, ParametersIVP
 from ..numerical.newton_raphson import NewtonRaphsonParams, newton_raphson
 from .geodesic import geodesic_dynamics, minimising_geodesic, scipy_bvp_geodesic
@@ -64,6 +65,16 @@ def exponential_map_factory(
     @_integrator_to_exp
     def exp_map(state: TangentSpace[jax.Array]) -> tuple[TangentSpace[jax.Array], TangentSpace[jax.Array]]:
         return integrator(ivp_params, state)
+
+    return exp_map
+
+
+def adjoint_exponential_map_factory(dt: float, metric: MetricFn):
+    def _dynamics(y: TangentSpace[jax.Array], t: float, *args: tp.Any):
+        return geodesic_dynamics(y, metric)
+
+    def exp_map(state: TangentSpace[jax.Array]):
+        return euler(_dynamics, dt, state, 0.0, 1.0).point
 
     return exp_map
 
